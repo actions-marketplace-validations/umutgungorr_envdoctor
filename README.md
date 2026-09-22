@@ -9,6 +9,21 @@
 > **Zero-dependency `.env` and `.env.example` linter, synchronizer, and code auditor CLI with JSON output.**  
 > Prevent missing environment variables, eliminate production deployment crashes, and keep your config templates perpetually synchronized.
 
+```text
+$ envdoctor check --strict
+
+🩺 EnvDoctor v0.2.0 — Verifying environment contract...
+[!] MISSING IN .env (Required by .env.example):
+    - STRIPE_SECRET_KEY
+    - DATABASE_POOL_SIZE
+
+[!] DISCREPANCY DETECTED:
+    .env.example requires 12 variables, but active .env only defines 10.
+
+[✗] Contract check failed with exit code 1.
+    (To safely sync missing placeholders, run: envdoctor sync)
+```
+
 ---
 
 ## 💥 The Problem
