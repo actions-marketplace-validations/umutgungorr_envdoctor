@@ -1,6 +1,8 @@
 """Tests for .env file parser."""
 
-from envdoctor.parser import parse_env_text
+from pathlib import Path
+
+from envdoctor.parser import parse_env_file, parse_env_text
 
 
 def test_parses_simple_key_values() -> None:
@@ -55,3 +57,27 @@ def test_ignores_comments_and_empty_lines() -> None:
     assert len(entries) == 1
     assert "APP_ENV" in entries
     assert entries["APP_ENV"].value == "production"
+
+
+def test_parses_multiline_and_escaped_quotes() -> None:
+    content = (
+        'MULTILINE="first line\nsecond line\nthird line"\n'
+        'ESCAPED="hello \\"world\\""\n'
+        "SINGLE_ESCAPED='it\\'s fine'\n"
+    )
+    entries = parse_env_text(content)
+    assert entries["MULTILINE"].value == "first line\nsecond line\nthird line"
+    assert entries["ESCAPED"].value == 'hello "world"'
+    assert entries["SINGLE_ESCAPED"].value == "it's fine"
+
+
+def test_parses_fixture_file() -> None:
+    fixture_path = Path(__file__).parent / "fixtures" / "complex.env"
+    entries = parse_env_file(fixture_path)
+    assert len(entries) >= 6
+    assert entries["PORT"].value == "3000"
+    assert entries["DB_PORT"].is_exported is True
+    assert "BEGIN CERTIFICATE" in entries["TLS_CERT"].value
+    assert entries["CUSTOM_GREETING"].value == 'Hello "World"'
+    assert entries["API_SECRET"].value == "secret'with'quotes"
+    assert entries["EMPTY_KEY"].value == ""

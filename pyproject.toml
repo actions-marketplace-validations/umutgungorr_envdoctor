@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "envdoctor"
-version = "0.1.0"
+version = "0.2.0"
 description = "Lightweight, zero-dependency .env & .env.example linter, synchronizer, and code auditor CLI."
 readme = "README.md"
 license = "MIT"

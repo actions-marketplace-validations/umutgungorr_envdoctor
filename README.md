@@ -3,10 +3,10 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-23%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-28%20passed-brightgreen.svg)]()
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero%20external-success.svg)]()
 
-> **Zero-dependency `.env` and `.env.example` linter, synchronizer, and code auditor CLI.**  
+> **Zero-dependency `.env` and `.env.example` linter, synchronizer, and code auditor CLI with JSON output.**  
 > Prevent missing environment variables, eliminate production deployment crashes, and keep your config templates perpetually synchronized.
 
 ---
@@ -24,11 +24,12 @@ In modern software projects, environment variables are essential for configurati
 
 ## 🌟 Key Features
 
-- **Zero External Dependencies**: Built 100% on the Python Standard Library (`re`, `pathlib`, `argparse`, `os`). Runs immediately anywhere without `pip install` overhead.
-- **Robust `.env` Parser**: Handles quotes, inline comments (`#`), `export` prefixes, and empty values.
+- **Zero External Dependencies**: Built 100% on the Python Standard Library (`re`, `pathlib`, `argparse`, `json`, `os`). Runs immediately anywhere without package installation overhead.
+- **Enterprise `.env` Parser**: Handles single/double quotes, multiline values across physical lines (certificates, JSON blobs), escaped quotes (`\"`, `\'`), inline comments (`#`), and `export` statements.
+- **Machine-Parseable JSON Output**: `--format json` support across all subcommands (`check`, `sync`, `audit`) for easy integration into automation pipelines.
 - **Safe Template Synchronizer (`sync`)**: Automatically populates `.env.example` using keys from `.env`, substituting real secrets with intelligent masked placeholders (e.g. `your_api_key_here`, `8080`, `localhost`).
-- **Codebase Ast/Regex Auditor (`audit`)**: Recursively scans Python (`os.environ`, `os.getenv`) and JavaScript/TypeScript (`process.env`) files to find environment variables used in code but missing from `.env`.
-- **CI/CD Ready**: Exits with code `1` when missing keys are found—ideal for GitHub Actions and pre-commit checks.
+- **Codebase AST / Regex Auditor (`audit`)**: Recursively scans Python (`os.environ`, `os.getenv`) and JavaScript/TypeScript (`process.env`) files to find environment variables used in code but missing from `.env`.
+- **Deterministic Exit Codes**: `0` (clean), `1` (contract violations / missing keys), `2` (CLI / file not found errors).
 
 ---
 
@@ -65,6 +66,9 @@ envdoctor check --env .env.local --example .env.template
 
 # Strict mode (fails if template is missing any local variables or values are empty)
 envdoctor check --strict
+
+# Machine-readable JSON output
+envdoctor --format json -o diff_report.json check
 ```
 
 **Sample Output:**
@@ -117,6 +121,9 @@ envdoctor audit
 
 # Scan specific directories
 envdoctor audit src/ backend/ --env .env
+
+# Export audit findings to JSON
+envdoctor --format json -o audit.json audit src/
 ```
 
 **Sample Output:**
@@ -139,6 +146,21 @@ envdoctor audit src/ backend/ --env .env
 
 ---
 
+## ⚙️ CLI Options & Deterministic Exit Codes
+
+```text
+usage: envdoctor [-h] [--version] [--format {text,json}] [-o OUTPUT]
+                 [--no-color] [-q] [-v] {check,sync,audit} ...
+```
+
+| Exit Code | Meaning |
+|-----------|---------|
+| `0` | Success: Environment is in sync / clean audit / dry-run |
+| `1` | Discrepancy detected: Missing variables in `.env`, strict failure, or missing code variables |
+| `2` | Error: File not found or invalid CLI arguments |
+
+---
+
 ## 🤖 CI/CD Integration (GitHub Actions)
 
 Catch missing environment variables before merging PRs:
@@ -158,7 +180,7 @@ jobs:
           python-version: '3.12'
       - name: Verify Environment Template
         run: |
-          python -m envdoctor check --strict --example .env.example --env .env.example
+          python -m envdoctor --format json check --strict --example .env.example --env .env.example
 ```
 
 ---
@@ -166,7 +188,7 @@ jobs:
 ## 🧪 Running Tests
 
 ```bash
-pytest tests contract_tests -v
+uv run --with pytest pytest
 ```
 
 ---
