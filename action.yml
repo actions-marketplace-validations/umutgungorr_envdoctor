@@ -1,23 +1,40 @@
 name: 'EnvDoctor Integrity Linter'
-description: 'Fast, zero-dependency .env & .env.example linter and synchronizer.'
+description: 'Fast, zero-dependency .env & .env.example contract linter, synchronizer, and code auditor.'
 author: 'Umut Güngör'
 branding:
   icon: 'check-circle'
   color: 'green'
 
 inputs:
+  command:
+    description: 'Subcommand to run (check, sync, audit)'
+    required: false
+    default: 'check'
   env-file:
     description: 'Path to active .env file'
     required: false
-    default: '.env.example'
+    default: '.env'
   example-file:
     description: 'Path to template .env.example file'
     required: false
     default: '.env.example'
+  format:
+    description: 'Output format (text, json)'
+    required: false
+    default: 'text'
+  args:
+    description: 'Additional flags (e.g. --strict, --allow-empty)'
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
   steps:
-    - name: Run EnvDoctor Check
+    - name: Run EnvDoctor Integrity Check
       shell: bash
-      run: python -m envdoctor check --strict --env ${{ inputs.env-file }} --example ${{ inputs.example-file }}
+      run: |
+        CMD="PYTHONPATH=\"${{ github.action_path }}/src\" python -m envdoctor --format ${{ inputs.format }} ${{ inputs.command }} --env ${{ inputs.env-file }} --example ${{ inputs.example-file }}"
+        if [ -n "${{ inputs.args }}" ]; then
+          CMD="$CMD ${{ inputs.args }}"
+        fi
+        eval $CMD
