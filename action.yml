@@ -1,0 +1,23 @@
+name: 'EnvDoctor Integrity Linter'
+description: 'Fast, zero-dependency .env & .env.example linter and synchronizer.'
+author: 'Umut Güngör'
+branding:
+  icon: 'check-circle'
+  color: 'green'
+
+inputs:
+  env-file:
+    description: 'Path to active .env file'
+    required: false
+    default: '.env.example'
+  example-file:
+    description: 'Path to template .env.example file'
+    required: false
+    default: '.env.example'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run EnvDoctor Check
+      shell: bash
+      run: python -m envdoctor check --strict --env ${{ inputs.env-file }} --example ${{ inputs.example-file }}

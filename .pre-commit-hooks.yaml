@@ -1,0 +1,8 @@
+- id: envdoctor
+  name: EnvDoctor
+  description: Fast, zero-dependency .env & .env.example linter and synchronizer CLI.
+  entry: envdoctor check --strict
+  language: python
+  types: [text]
+  files: ^(\.env|\.env\.example)$
+  stages: [pre-commit]
