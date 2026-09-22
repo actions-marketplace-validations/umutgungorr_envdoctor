@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "envdoctor"
+version = "0.1.0"
+description = "Lightweight, zero-dependency .env & .env.example linter, synchronizer, and code auditor CLI."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Umut Güngör" }]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+envdoctor = "envdoctor.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/envdoctor"]
+
+[tool.pytest.ini_options]
+testpaths = ["contract_tests", "tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+cache-dir = "../../../.ruff_cache"
