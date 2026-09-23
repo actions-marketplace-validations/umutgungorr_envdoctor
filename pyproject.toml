@@ -3,7 +3,7 @@ requires = ["hatchling==1.27.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "envdoctor"
+name = "envdoctor-cli"
 version = "0.2.0"
 description = "Lightweight, zero-dependency .env & .env.example linter, synchronizer, and code auditor CLI."
 readme = "README.md"
@@ -14,6 +14,7 @@ dependencies = []
 
 [project.scripts]
 envdoctor = "envdoctor.main:main"
+envdoctor-cli = "envdoctor.main:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/envdoctor"]
