@@ -9,6 +9,10 @@
 > **Zero-dependency `.env` and `.env.example` linter, synchronizer, and code auditor CLI with JSON output.**  
 > Prevent missing environment variables, eliminate production deployment crashes, and keep your config templates perpetually synchronized.
 
+<p align="center">
+  <img src="assets/demo.png" alt="EnvDoctor Demo" width="850">
+</p>
+
 ```text
 $ envdoctor check --strict
 
