@@ -1,5 +1,7 @@
 # EnvDoctor 🩺
 
+[![PyPI version](https://img.shields.io/pypi/v/envdoctor-cli.svg?style=flat-square&logo=pypi&logoColor=white)](https://pypi.org/project/envdoctor-cli/)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/envdoctor-cli.svg?style=flat-square)](https://pypi.org/project/envdoctor-cli/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -8,6 +10,10 @@
 
 > **Zero-dependency `.env` and `.env.example` linter, synchronizer, and code auditor CLI with JSON output.**  
 > Prevent missing environment variables, eliminate production deployment crashes, and keep your config templates perpetually synchronized.
+
+<p align="center">
+  <img src="assets/demo.png" alt="EnvDoctor Demo" width="850">
+</p>
 
 ```text
 $ envdoctor check --strict
@@ -52,10 +58,10 @@ In modern software projects, environment variables are essential for configurati
 
 ### 1. Installation
 
-Install via pip:
+Install via pip from PyPI:
 
 ```bash
-pip install .
+pip install envdoctor-cli
 ```
 
 Or run directly without installation:
