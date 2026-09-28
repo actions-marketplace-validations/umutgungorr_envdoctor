@@ -49,171 +49,33 @@ In modern software projects, environment variables are essential for configurati
 - **Enterprise `.env` Parser**: Handles single/double quotes, multiline values across physical lines (certificates, JSON blobs), escaped quotes (`\"`, `\'`), inline comments (`#`), and `export` statements.
 - **Machine-Parseable JSON Output**: `--format json` support across all subcommands (`check`, `sync`, `audit`) for easy integration into automation pipelines.
 - **Safe Template Synchronizer (`sync`)**: Automatically populates `.env.example` using keys from `.env`, substituting real secrets with intelligent masked placeholders (e.g. `your_api_key_here`, `8080`, `localhost`).
-- **Codebase AST / Regex Auditor (`audit`)**: Recursively scans Python (`os.environ`, `os.getenv`) and JavaScript/TypeScript (`process.env`) files to find environment variables used in code but missing from `.env`.
-- **Deterministic Exit Codes**: `0` (clean), `1` (contract violations / missing keys), `2` (CLI / file not found errors).
+- **Codebase AST / Regex Auditor (`audit`)**: Recursively scans your codebase (`.py`, `.js`, `.ts`) to find environment variables used in code but missing from your `.env.example`.
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Installation
-
-Install via pip from PyPI:
+### Installation
 
 ```bash
 pip install envdoctor-cli
 ```
 
-Or run directly without installation:
+### Usage
 
 ```bash
-python -m envdoctor --help
-```
-
----
-
-## 🛠️ Commands & Usage
-
-### 1. `envdoctor check` (Compare & Lint)
-
-Compare your local `.env` against the reference `.env.example`:
-
-```bash
-# Standard check (fails if required template variables are missing locally)
+# Verify that .env matches .env.example
 envdoctor check
 
-# Custom file paths
-envdoctor check --env .env.local --example .env.template
-
-# Strict mode (fails if template is missing any local variables or values are empty)
-envdoctor check --strict
-
-# Machine-readable JSON output
-envdoctor --format json -o diff_report.json check
-```
-
-**Sample Output:**
-```text
-====================================================================
-🩺 EnvDoctor Health Check Report
-====================================================================
-  Active Env File:     .env (12 variables)
-  Reference Template:  .env.example (14 variables)
---------------------------------------------------------------------
-
-[!] CRITICAL: Variables declared in .env.example but MISSING in .env:
-    - REDIS_URL
-    - STRIPE_WEBHOOK_SECRET
-
---------------------------------------------------------------------
-✗ FAILED: Environment discrepancies detected. Please resolve above issues.
-====================================================================
-```
-
----
-
-### 2. `envdoctor sync` (Safe Template Generation)
-
-Safely sync newly added local `.env` variables to `.env.example` without exposing real secrets:
-
-```bash
-# Preview what would be appended
-envdoctor sync --dry-run
-
-# Append new variables with masked dummy placeholders
+# Automatically update .env.example with missing keys (masks values securely)
 envdoctor sync
-```
 
-EnvDoctor automatically generates safe values:
-- `PORT` $\rightarrow$ `8080`
-- `DATABASE_URL` $\rightarrow$ `postgresql://postgres:password@localhost:5432/my_database`
-- `STRIPE_KEY` $\rightarrow$ `your_stripe_key_here`
-- `DEBUG` $\rightarrow$ `true`
-
----
-
-### 3. `envdoctor audit` (Scan Source Code)
-
-Scan your application code to find environment variables that aren't defined in `.env`:
-
-```bash
-# Scan current directory
-envdoctor audit
-
-# Scan specific directories
-envdoctor audit src/ backend/ --env .env
-
-# Export audit findings to JSON
-envdoctor --format json -o audit.json audit src/
-```
-
-**Sample Output:**
-```text
-====================================================================
-🩺 EnvDoctor Codebase Audit Report
-====================================================================
-  Scanned Paths:       src/, backend/
-  Referenced Envs:     18 variables across 42 usages
-  Known in .env:       16 variables
---------------------------------------------------------------------
-
-[!] MISSING IN .env (Code references these, but they are not defined):
-    - ANALYTICS_ID             (src/services/telemetry.py:14)
-
-[*] STALE VARIABLES (Defined in .env, but never referenced in scanned code):
-    - LEGACY_FEATURE_V1
-====================================================================
+# Scan your Python/JS codebase for variables you forgot to add to .env
+envdoctor audit ./src
 ```
 
 ---
 
-## ⚙️ CLI Options & Deterministic Exit Codes
+## 📝 License
 
-```text
-usage: envdoctor [-h] [--version] [--format {text,json}] [-o OUTPUT]
-                 [--no-color] [-q] [-v] {check,sync,audit} ...
-```
-
-| Exit Code | Meaning |
-|-----------|---------|
-| `0` | Success: Environment is in sync / clean audit / dry-run |
-| `1` | Discrepancy detected: Missing variables in `.env`, strict failure, or missing code variables |
-| `2` | Error: File not found or invalid CLI arguments |
-
----
-
-## 🤖 CI/CD Integration (GitHub Actions)
-
-Catch missing environment variables before merging PRs:
-
-```yaml
-name: Configuration Integrity
-
-on: [push, pull_request]
-
-jobs:
-  envdoctor:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Verify Environment Template
-        run: |
-          python -m envdoctor --format json check --strict --example .env.example --env .env.example
-```
-
----
-
-## 🧪 Running Tests
-
-```bash
-uv run --with pytest pytest
-```
-
----
-
-## 📄 License
-
-MIT License. See [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
