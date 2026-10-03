@@ -76,6 +76,11 @@ envdoctor audit ./src
 
 ---
 
+
+## Project case study
+
+EnvDoctor is an open-source project by [Umut Güngör](https://umutgungorr.com/). Read the [EnvDoctor case study](https://umutgungorr.com/projects/envdoctor) for its approach, capabilities, and current scope.
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
