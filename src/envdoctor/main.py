@@ -157,7 +157,9 @@ def handle_check(args: argparse.Namespace) -> int:
     env_map = parse_env_file(env_path)
     example_map = parse_env_file(example_path)
 
-    diff = compare_environments(env_map, example_map, allow_empty=getattr(args, "allow_empty", False))
+    diff = compare_environments(
+        env_map, example_map, allow_empty=getattr(args, "allow_empty", False)
+    )
     strict = getattr(args, "strict", False)
 
     if args.format == "json":
@@ -193,7 +195,11 @@ def handle_sync(args: argparse.Namespace) -> int:
 
     env_map = parse_env_file(env_path)
     dry_run = getattr(args, "dry_run", False)
-    res = sync_example_file(env_map, example_path, dry_run=dry_run)
+    try:
+        res = sync_example_file(env_map, example_path, dry_run=dry_run)
+    except OSError:
+        print(f"Error: Could not read or update template '{example_path}'.", file=sys.stderr)
+        return 2
 
     if args.format == "json":
         data = {
@@ -269,14 +275,18 @@ def handle_audit(args: argparse.Namespace) -> int:
     has_issues = False
     if res.missing_from_env:
         has_issues = True
-        lines.append(f"\n[!] MISSING IN {env_path.name} (Code references these, but they are not defined):")
+        lines.append(
+            f"\n[!] MISSING IN {env_path.name} (Code references these, but they are not defined):"
+        )
         for k in sorted(res.missing_from_env):
             refs = [r for r in res.references if r.key == k]
             sample = refs[0]
             lines.append(f"    - {k:<24} ({sample.file_path}:{sample.line_number})")
 
     if res.stale_in_env:
-        lines.append(f"\n[*] STALE VARIABLES (Defined in {env_path.name}, but never referenced in scanned code):")
+        lines.append(
+            f"\n[*] STALE VARIABLES (Defined in {env_path.name}, but never referenced in scanned code):"
+        )
         for k in sorted(res.stale_in_env):
             lines.append(f"    ? {k}")
 

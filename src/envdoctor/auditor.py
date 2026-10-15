@@ -5,8 +5,9 @@ from __future__ import annotations
 import os
 import re
 from collections.abc import Iterable
-from dataclasses import dataclass
 from pathlib import Path
+
+from .compat import slotted_dataclass
 
 AUDIT_EXTENSIONS = {
     ".py",
@@ -49,7 +50,7 @@ PATTERNS = [
 ]
 
 
-@dataclass(slots=True)
+@slotted_dataclass
 class CodeReference:
     key: str
     file_path: str
@@ -57,7 +58,7 @@ class CodeReference:
     line_snippet: str
 
 
-@dataclass(slots=True)
+@slotted_dataclass
 class AuditResult:
     references: list[CodeReference]
     unique_referenced_keys: set[str]

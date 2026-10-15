@@ -22,6 +22,18 @@ def test_cli_check_success(tmp_path: Path) -> None:
     assert exit_code == 0
 
 
+def test_cli_sync_write_failure_returns_error_instead_of_success(tmp_path, capsys):
+    source = tmp_path / ".env"
+    source.write_text("TOKEN=private-value\n", encoding="utf-8")
+    invalid_target = tmp_path / "directory"
+    invalid_target.mkdir()
+    assert main(["sync", "--env", str(source), "--example", str(invalid_target)]) == 2
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "Could not read or update template" in captured.err
+    assert "private-value" not in captured.err
+
+
 def test_cli_check_missing_fails_code_one(tmp_path: Path) -> None:
     env_file = tmp_path / ".env"
     example_file = tmp_path / ".env.example"
@@ -38,7 +50,9 @@ def test_cli_missing_file_fails_code_two(tmp_path: Path) -> None:
     example_file.write_text("PORT=3000\n", encoding="utf-8")
 
     # Non-existent .env file should exit 2
-    exit_code = main(["check", "--env", str(tmp_path / "non_existent.env"), "--example", str(example_file)])
+    exit_code = main(
+        ["check", "--env", str(tmp_path / "non_existent.env"), "--example", str(example_file)]
+    )
     assert exit_code == 2
 
 
@@ -50,13 +64,19 @@ def test_cli_format_json(tmp_path: Path) -> None:
     env_file.write_text("PORT=8080\n", encoding="utf-8")
     example_file.write_text("PORT=3000\nREQUIRED_VAR=needs_setting\n", encoding="utf-8")
 
-    exit_code = main([
-        "--format", "json",
-        "-o", str(out_file),
-        "check",
-        "--env", str(env_file),
-        "--example", str(example_file),
-    ])
+    exit_code = main(
+        [
+            "--format",
+            "json",
+            "-o",
+            str(out_file),
+            "check",
+            "--env",
+            str(env_file),
+            "--example",
+            str(example_file),
+        ]
+    )
     assert exit_code == 1
     assert out_file.is_file()
 

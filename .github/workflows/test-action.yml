@@ -1,0 +1,40 @@
+name: Test GitHub Action
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-action:
+    name: Test EnvDoctor Action (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Create fixture files
+        shell: bash
+        run: |
+          echo "PORT=3000" > .env
+          echo "DATABASE_URL=postgres://localhost:5432/db" >> .env
+          echo "PORT=8080" > .env.example
+          echo "DATABASE_URL=postgres://user:pass@host/db" >> .env.example
+
+      - name: Run EnvDoctor Action (check)
+        uses: ./
+        with:
+          command: 'check'
+          env-file: '.env'
+          example-file: '.env.example'
