@@ -1,31 +1,50 @@
 # Contributing to EnvDoctor
 
-Thank you for contributing to EnvDoctor! We welcome improvements, bug reports, and pull requests.
+Thank you for your interest in contributing to **EnvDoctor**! We welcome improvements, bug reports, feature suggestions, and pull requests.
 
-## Development Setup
+---
 
-EnvDoctor has **zero external dependencies** and relies exclusively on Python 3.12+ stdlib.
+## 🛠️ Development Setup
+
+EnvDoctor is built with **zero external runtime dependencies** using the Python standard library. It supports Python 3.9 through 3.14.
 
 ```bash
 # Clone the repository
 git clone https://github.com/umutgungorr/envdoctor.git
 cd envdoctor
 
-# Create a virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install editable package with dev dependencies
-pip install -e .
-pip install pytest ruff
+# Install editable development build with uv
+uv pip install -e .
 ```
 
-## Running Tests & Linters
+---
+
+## 🧪 Running Tests & Quality Checks
+
+We maintain a strict 100% test pass rate across all operating systems:
 
 ```bash
-# Run test suite
-pytest tests contract_tests -v
+# Run full pytest suite
+uv run --with pytest pytest contract_tests tests -v
 
-# Run linter
-ruff check .
+# Run Ruff linter
+uv run --with ruff ruff check .
+
+# Run Ruff format check
+uv run --with ruff ruff format --check .
 ```
+
+---
+
+## 📝 Pull Request Guidelines
+
+1. Ensure all 32+ tests pass locally before submitting.
+2. Maintain zero external runtime dependencies (`dependencies = []` in `pyproject.toml`).
+3. Add unit tests for any new edge case (e.g. new quote format, masking rule, or language regex).
+4. Follow the existing clean Python code style and include type hints.
+
+---
+
+## 📜 Code of Conduct
+
+Please review and respect our [Code of Conduct](CODE_OF_CONDUCT.md) in all community interactions.

@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
-from dataclasses import dataclass
 
+from .compat import slotted_dataclass
 from .parser import EnvEntry
 
 
-@dataclass(slots=True)
+@slotted_dataclass
 class DiffResult:
     missing_in_env: list[str]
     missing_in_example: list[str]

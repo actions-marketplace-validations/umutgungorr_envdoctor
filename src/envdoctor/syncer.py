@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
 from pathlib import Path
 
+from .compat import slotted_dataclass
 from .parser import EnvEntry
 
 
-@dataclass(slots=True)
+@slotted_dataclass
 class SyncResult:
     added_keys: list[str]
     skipped_keys: list[str]
@@ -53,10 +53,7 @@ def sync_example_file(
     existing_keys: set[str] = set()
 
     if example_path.is_file():
-        try:
-            existing_example_content = example_path.read_text(encoding="utf-8", errors="replace")
-        except OSError:
-            existing_example_content = ""
+        existing_example_content = example_path.read_text(encoding="utf-8", errors="replace")
 
     from .parser import parse_env_text
 
@@ -73,9 +70,9 @@ def sync_example_file(
             continue
 
         placeholder = generate_safe_placeholder(key, entry.value)
-        comment_suffix = f" # {entry.comment}" if entry.comment else ""
+        # Private inline comments can contain credentials too; never export them.
         export_prefix = "export " if entry.is_exported else ""
-        new_lines.append(f"{export_prefix}{key}={placeholder}{comment_suffix}")
+        new_lines.append(f"{export_prefix}{key}={placeholder}")
         added_keys.append(key)
 
     if not added_keys:
@@ -87,18 +84,17 @@ def sync_example_file(
         )
 
     # Prepare appended content
-    separator = "\n" if existing_example_content.endswith("\n") or not existing_example_content else "\n\n"
+    separator = (
+        "\n" if existing_example_content.endswith("\n") or not existing_example_content else "\n\n"
+    )
     header = "# Synchronized by EnvDoctor\n"
     content_to_append = separator + header + "\n".join(new_lines) + "\n"
 
     final_content = existing_example_content + content_to_append
 
     if not dry_run:
-        try:
-            example_path.write_text(final_content, encoding="utf-8")
-            was_written = True
-        except OSError:
-            was_written = False
+        example_path.write_text(final_content, encoding="utf-8")
+        was_written = True
     else:
         was_written = False
 

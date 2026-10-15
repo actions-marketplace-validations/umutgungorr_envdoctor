@@ -1,20 +1,64 @@
 [build-system]
-requires = ["hatchling==1.27.0"]
+requires = ["hatchling>=1.25.0"]
 build-backend = "hatchling.build"
 
 [project]
 name = "envdoctor-cli"
 version = "0.2.0"
-description = "Lightweight, zero-dependency .env & .env.example linter, synchronizer, and code auditor CLI."
+description = "Zero-dependency .env & .env.example linter, synchronizer, and codebase config auditor."
 readme = "README.md"
-license = "MIT"
-authors = [{ name = "Umut Güngör" }]
-requires-python = ">=3.12"
+authors = [
+    { name = "Umut Güngör", email = "umutgungor.dev@gmail.com" }
+]
+maintainers = [
+    { name = "Umut Güngör", email = "umutgungor.dev@gmail.com" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.9"
+keywords = [
+    "cli",
+    "dotenv",
+    "env",
+    "configuration",
+    "linter",
+    "secrets",
+    "devops",
+    "codebase-audit",
+    "security",
+    "developer-tools"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Utilities"
+]
 dependencies = []
 
 [project.scripts]
 envdoctor = "envdoctor.main:main"
 envdoctor-cli = "envdoctor.main:main"
+
+[project.urls]
+Homepage = "https://github.com/umutgungorr/envdoctor"
+Repository = "https://github.com/umutgungorr/envdoctor"
+Issues = "https://github.com/umutgungorr/envdoctor/issues"
+Changelog = "https://github.com/umutgungorr/envdoctor/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/envdoctor"]
@@ -22,8 +66,14 @@ packages = ["src/envdoctor"]
 [tool.pytest.ini_options]
 testpaths = ["contract_tests", "tests"]
 pythonpath = ["src"]
+addopts = "-v --strict-markers"
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py39"
 line-length = 100
-cache-dir = "../../../.ruff_cache"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP"]
+ignore = [
+    "E501",  # Line length handled by formatter
+]
