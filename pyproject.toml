@@ -55,7 +55,8 @@ envdoctor = "envdoctor.main:main"
 envdoctor-cli = "envdoctor.main:main"
 
 [project.urls]
-Homepage = "https://github.com/umutgungorr/envdoctor"
+Homepage = "https://umutgungorr.com/projects/envdoctor"
+Documentation = "https://umutgungorr.com/projects/envdoctor"
 Repository = "https://github.com/umutgungorr/envdoctor"
 Issues = "https://github.com/umutgungorr/envdoctor/issues"
 Changelog = "https://github.com/umutgungorr/envdoctor/blob/main/CHANGELOG.md"
