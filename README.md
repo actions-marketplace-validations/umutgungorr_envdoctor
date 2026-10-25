@@ -17,7 +17,7 @@
 [![CI](https://github.com/umutgungorr/envdoctor/actions/workflows/ci.yml/badge.svg)](https://github.com/umutgungorr/envdoctor/actions)
 [![Action CI](https://github.com/umutgungorr/envdoctor/actions/workflows/test-action.yml/badge.svg)](https://github.com/umutgungorr/envdoctor/actions)
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-EnvDoctor%20Action-green?logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/envdoctor-integrity-linter)
-[![Version](https://img.shields.io/badge/version-v0.2.0-blue.svg?logo=git&logoColor=white)](https://github.com/umutgungorr/envdoctor/releases)
+[![Version](https://img.shields.io/badge/version-v0.2.1-blue.svg?logo=git&logoColor=white)](https://github.com/umutgungorr/envdoctor/releases)
 [![PyPI](https://img.shields.io/pypi/v/envdoctor-cli.svg?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/envdoctor-cli/)
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-3776AB.svg?logo=python&logoColor=white)](https://github.com/umutgungorr/envdoctor)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0%20external-success.svg)](pyproject.toml)
@@ -169,7 +169,7 @@ Add to your `.pre-commit-config.yaml`:
 ```yaml
 repos:
   - repo: https://github.com/umutgungorr/envdoctor
-    rev: v0.2.0
+    rev: v0.2.1
     hooks:
       - id: envdoctor-check
         args: ["--strict"]
