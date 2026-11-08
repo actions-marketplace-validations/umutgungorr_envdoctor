@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "envdoctor-cli"
-version = "0.2.0"
+version = "0.2.1"
 description = "Zero-dependency .env & .env.example linter, synchronizer, and codebase config auditor."
 readme = "README.md"
 authors = [
@@ -55,7 +55,7 @@ envdoctor = "envdoctor.main:main"
 envdoctor-cli = "envdoctor.main:main"
 
 [project.urls]
-Homepage = "https://umutgungorr.com/projects/envdoctor"
+Homepage = "https://umutgungorr.com/"
 Documentation = "https://umutgungorr.com/projects/envdoctor"
 Repository = "https://github.com/umutgungorr/envdoctor"
 Issues = "https://github.com/umutgungorr/envdoctor/issues"
